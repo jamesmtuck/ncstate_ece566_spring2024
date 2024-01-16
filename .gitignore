@@ -1,3 +1,14 @@
+# Emacs
+*~
+.\#*
+
+# CMake
+cmake-build-*
+build
+.idea
+*-tests
+*-test
+
 # Prerequisites
 *.d
 
