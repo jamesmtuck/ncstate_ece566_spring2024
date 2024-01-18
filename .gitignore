@@ -5,6 +5,7 @@
 # CMake
 cmake-build-*
 build
+*-build
 .idea
 *-tests
 *-test

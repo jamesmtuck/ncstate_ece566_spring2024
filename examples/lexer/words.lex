@@ -10,5 +10,4 @@
 [a-z]+       printf("word (%s)\n",yytext);
 
 
-
 %%
