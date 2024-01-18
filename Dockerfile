@@ -52,8 +52,8 @@ RUN apt-get install -y --no-install-recommends libclc-17-dev && apt-get clean
 RUN apt-get install -y --no-install-recommends  libunwind-17-dev && apt-get clean
 # mlir
 RUN apt-get install -y --no-install-recommends libmlir-17-dev mlir-17-tools && apt-get clean
-# bolt
-RUN apt-get install -y --no-install-recommends libbolt-17-dev bolt-17 && apt-get clean
+# bolt - comment out - doesn't work on apple silicon
+# RUN apt-get install -y --no-install-recommends libbolt-17-dev bolt-17 && apt-get clean
 # flang
 RUN apt-get install -y --no-install-recommends flang-17 && apt-get clean
 # wasm support
