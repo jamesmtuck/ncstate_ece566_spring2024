@@ -40,7 +40,16 @@ int getReg() {
 %verbose
 %define parse.trace
 
-%token REG IMMEDIATE ASSIGN SEMI PLUS MINUS LPAREN RPAREN LBRACKET RBRACKET
+%union {
+  int reg;
+  int imm;
+}
+
+%token <reg> REG
+%token <imm> IMMEDIATE
+%type <reg> expr
+
+%token ASSIGN SEMI PLUS MINUS LPAREN RPAREN LBRACKET RBRACKET
 
 %left  PLUS MINUS
 
@@ -48,17 +57,49 @@ int getReg() {
 
 program:   REG ASSIGN expr SEMI
 {
+  //printf("program: REG ASSIGN expr SEMI\n");
+  printf("ADD R%d, R%d, 0\n",$1,$3);
   return 0; // if we get here, we succeeded!
 }
 ;
 
 expr: IMMEDIATE
+{
+  int reg = getReg();
+  //printf("expr: IMMEDIATE (%d)\n", $1);
+  printf("AND R%d, R%d, 0\n",reg,reg);
+  printf("ADD R%d, R%d, %d\n", reg, reg, $1);
+  $$ = reg;
+}
 | REG
+{
+  printf("expr: REG (%d)\n", $1);
+  $$ = $1;
+}
 | expr PLUS expr
+{
+  int reg = getReg();
+  //printf("expr: IMMEDIATE (%d)\n", $1);
+  printf("ADD R%d, R%d, R%d\n", reg, $1, $3);
+  $$ = reg;
+}
 | expr MINUS expr
+{
+  printf("expr: expr MINUS expr\n");
+}
 | LPAREN expr RPAREN
+{
+  printf("expr: LPAREN expr RPAREN\n");
+}
 | MINUS expr
+{
+  printf("expr: MINUS expr\n");
+}
+
 | LBRACKET expr RBRACKET
+{
+  printf("expr: LBRACKET expr RBRACKET\n");
+}
 ;
 
 %%

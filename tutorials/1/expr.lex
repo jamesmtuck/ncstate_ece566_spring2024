@@ -2,6 +2,15 @@
 #include <stdio.h>
 #include <iostream>
 #include <math.h>
+
+#include "expr.y.hpp"
+
+
+#define print quiet
+
+void quiet(const char *, ...) {
+}
+  
 %}
 
 
@@ -11,19 +20,27 @@
 
 [ \n\t]    // ignore a space, a tab, a newline
 
-[Rr][0-7]   { printf("REG %s\n", yytext); }
+[Rr][0-7]   {
+  print("REG %s\n", yytext);
+  yylval.reg = yytext[1] - '0'; 
+  return REG;
+ }
 
-[0-9]+      { printf("IMMEDIATE %s\n",yytext); }
+[0-9]+      {
+  print("IMMEDIATE %s\n",yytext);
+  yylval.imm = atoi(yytext);
+  return IMMEDIATE;
+}
           
-"="         { printf("ASSIGN\n"); }
+"="         { print("ASSIGN\n"); return ASSIGN; }
 
-;         { printf("SEMI\n");     }
-"("       { printf("LPAREN\n");   }
-")"       { printf("RPAREN\n");   }
-"["       { printf("LBRACKET\n"); }
-"]"       { printf("RBRACKET\n"); }
-"-"       { printf("MINUS\n");    }
-"+"       { printf("PLUS\n");     }
+;         { print("SEMI\n"); return SEMI;    }
+"("       { print("LPAREN\n"); return LPAREN;  }
+")"       { print("RPAREN\n"); return RPAREN;  }
+"["       { print("LBRACKET\n"); return LBRACKET; }
+"]"       { print("RBRACKET\n"); return RBRACKET; }
+"-"       { print("MINUS\n"); return MINUS;   }
+"+"       { print("PLUS\n");   return PLUS;  }
 
 
 "//".*\n  
