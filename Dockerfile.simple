@@ -24,7 +24,8 @@ RUN apt-get update \
       flex \
       libfl-dev \
       libzstd-dev \
-      libcurl4-openssl-dev \      
+      libcurl4-openssl-dev \
+      libedit-dev \
    && apt-get clean
 
 
@@ -53,7 +54,7 @@ RUN apt-get install -y --no-install-recommends  libunwind-17-dev && apt-get clea
 # mlir
 RUN apt-get install -y --no-install-recommends libmlir-17-dev mlir-17-tools && apt-get clean
 # bolt
-RUN apt-get install -y --no-install-recommends libbolt-17-dev bolt-17 && apt-get clean
+# RUN apt-get install -y --no-install-recommends libbolt-17-dev bolt-17 && apt-get clean
 # flang
 RUN apt-get install -y --no-install-recommends flang-17 && apt-get clean
 # wasm support

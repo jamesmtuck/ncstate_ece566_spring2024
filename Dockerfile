@@ -25,6 +25,7 @@ RUN apt-get update \
       libfl-dev \
       libzstd-dev \
       libcurl4-openssl-dev \
+      libedit-dev \
    && apt-get clean
 
 
