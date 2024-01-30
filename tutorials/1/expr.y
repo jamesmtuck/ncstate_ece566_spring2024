@@ -85,20 +85,35 @@ expr: IMMEDIATE
 }
 | expr MINUS expr
 {
-  printf("expr: expr MINUS expr\n");
+  //printf("expr: expr MINUS expr\n");
+  int reg = getReg();
+  //printf("expr: IMMEDIATE (%d)\n", $1);
+  printf("SUB R%d, R%d, R%d\n", reg, $1, $3);
+  $$ = reg;
+
 }
 | LPAREN expr RPAREN
 {
-  printf("expr: LPAREN expr RPAREN\n");
+  //printf("expr: LPAREN expr RPAREN\n");
+  $$ = $2;
 }
 | MINUS expr
 {
-  printf("expr: MINUS expr\n");
+  //printf("expr: MINUS expr\n");
+  int reg = getReg();
+  //printf("expr: IMMEDIATE (%d)\n", $1);
+  printf("NOT R%d, R%d\n", reg, $2);
+  printf("ADD R%d, R%d, 1\n", reg, reg);
+  $$ = reg;
 }
-
 | LBRACKET expr RBRACKET
 {
-  printf("expr: LBRACKET expr RBRACKET\n");
+  //  printf("expr: LBRACKET expr RBRACKET\n");
+  //printf("expr: expr MINUS expr\n");
+  int reg = getReg();
+  //printf("expr: IMMEDIATE (%d)\n", $1);
+  printf("LDR R%d, R%d, 0\n", reg, $2);
+  $$ = reg;
 }
 ;
 

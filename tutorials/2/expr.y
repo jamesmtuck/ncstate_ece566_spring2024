@@ -57,12 +57,13 @@ Value *regs[8] = {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
 %define parse.trace
 
 %union {
+  Value *val;
   int reg;
   int imm;
 }
 // Put this after %union and %token directives
 
-%type <reg> expr
+%type <val> expr
 %token <reg> REG ARG
 %token <imm> IMMEDIATE
 %token RETURN ASSIGN SEMI PLUS MINUS LPAREN RPAREN LBRACKET RBRACKET
@@ -75,50 +76,53 @@ Value *regs[8] = {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
 
 program:   REG ASSIGN expr SEMI
 {
-
+  regs[$1] = $3;
 }
 | program REG ASSIGN expr SEMI
 { 
-
+  regs[$2] = $4;
 }
 | program RETURN expr SEMI
 {
-
+  Builder.CreateRet($3);
   return 0; /* program is done */
 }
 ;
 
 expr: IMMEDIATE
 {
-
+  $$ = Builder.getInt32($1);
 }
 | REG
 { 
-
+  $$ = regs[$1];
 }
 | ARG
 {
-
+  Function *F = Builder.GetInsertBlock()->getParent();
+  $$ = F->getArg($1);
 }
 | expr PLUS expr
 {
-
+  $$ = Builder.CreateAdd($1,$3);
 }
 | expr MINUS expr
 {
-
+  $$ = Builder.CreateSub($1,$3);
 }
 | LPAREN expr RPAREN
 {
-
+  $$ = $2;
 }
 | MINUS expr
 {
-
+  $$ = Builder.CreateNeg($2);
 }
 | LBRACKET expr RBRACKET
 {
-
+  Value * tmp = Builder.CreateIntToPtr($2,   
+                   PointerType::get(Builder.getInt32Ty(),0));
+  $$ = Builder.CreateLoad(Builder.getInt32Ty(),tmp);
 
 }
 ;
@@ -135,13 +139,12 @@ int main(int argc, char *argv[])
   yydebug = 0;
   yyin = stdin; // get input from screen
 
-  
   // Make Module
   Module *M = new Module("Tutorial2", TheContext);
     
   std::vector<Type*> argTypes(4, Builder.getInt32Ty());
   
-  // Create void function type with no arguments
+  // Create void function type with 4 arguments
   FunctionType *FunType = 
     FunctionType::get(Builder.getInt32Ty(),argTypes,false);
   

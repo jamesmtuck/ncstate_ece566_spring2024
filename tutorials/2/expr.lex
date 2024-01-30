@@ -27,6 +27,9 @@ using namespace llvm;
 
 [ \n\t]  // ignore a space, a tab, a newline
 
+[Aa][0-3] {
+  yylval.reg = atoi(yytext+1); return ARG;
+ } 
 [Rr][0-9]+ {
             yylval.reg = atoi(yytext+1);  return REG;
           }
@@ -56,6 +59,9 @@ using namespace llvm;
           } 
 "+"       { 
             return PLUS;
+          }
+return    {
+            return RETURN;
           }
 
 "//".*\n
