@@ -49,6 +49,8 @@ static cl::opt<bool>
                 cl::init(false));
 
 
+static llvm::Statistic DeadInst = {"", "Dead", "DCE found dead instructions"};
+static llvm::Statistic WorkList = {"", "WorkList", "Added to work list"};
 
 void NoOptimization(Module &M) {
   // Do nothing! Simplest optimization that exists
