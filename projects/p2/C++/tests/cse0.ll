@@ -5,7 +5,7 @@
 source_filename = "cse0"
 
 ; CHECK-LABEL: @cse0
-define void @cse0(i8* %0, i32* %1, i64* %2, i32 %3, i64 %4, i8 %5) {
+define void @cse0(ptr %0, ptr %1, ptr %2, i32 %3, i64 %4, i8 %5) {
 BB:
 ; CHECK-NEXT: BB
   %B = lshr i32 %3, %3

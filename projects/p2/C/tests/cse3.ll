@@ -1,8 +1,8 @@
 ; ModuleID = 'cse3'
 ; CHECK-LABEL: source_filename = "cse3"
 source_filename = "cse3"
-; CHECK-LABEL: @cse3(i8* %0, i32* %1, i64* %2, i32 %3, i64 %4, i8 %5)
-define i32 @cse3(i8* %0, i32* %1, i64* %2, i32 %3, i64 %4, i8 %5) {
+; CHECK-LABEL: @cse3(ptr %0, ptr %1, ptr %2, i32 %3, i64 %4, i8 %5) 
+define i32 @cse3(ptr %0, ptr %1, ptr %2, i32 %3, i64 %4, i8 %5) { 
 ; CHECK-NEXT: BB
 ; CHECK: alloca
 ; CHECK: load
