@@ -41,7 +41,7 @@ function(p2_notest name class)
             WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
             DEPENDS p2 ${name}-out.bc
     )
-endfunction(p2_test)
+endfunction(p2_notest)
 
 p2_test(cse0 CSEDead)
 p2_test(cse1 CSEElim)
