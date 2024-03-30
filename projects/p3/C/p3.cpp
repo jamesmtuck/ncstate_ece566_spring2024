@@ -41,7 +41,6 @@ extern "C" {
   void SoftwareFaultTolerance(LLVMModuleRef M);
 }
 
-static void summarize(Module *M);
 static void print_csv_file(std::string outputfile);
 
 static cl::opt<std::string>
@@ -128,30 +127,6 @@ int main(int argc, char **argv) {
     Out->keep();
 
     return 0;
-}
-
-static llvm::Statistic nFunctions = {"", "Functions", "number of functions"};
-static llvm::Statistic nInstructions = {"", "Instructions", "number of instructions"};
-static llvm::Statistic nLoads = {"", "Loads", "number of loads"};
-static llvm::Statistic nStores = {"", "Stores", "number of stores"};
-
-static void summarize(Module *M) {
-    for (auto i = M->begin(); i != M->end(); i++) {
-        if (i->begin() != i->end()) {
-            nFunctions++;
-        }
-        for (auto j = i->begin(); j != i->end(); j++) {
-            for (auto k = j->begin(); k != j->end(); k++) {
-                Instruction &I = *k;
-                nInstructions++;
-                if (isa<LoadInst>(&I)) {
-                    nLoads++;
-                } else if (isa<StoreInst>(&I)) {
-                    nStores++;
-                }
-            }
-        }
-    }
 }
 
 static void print_csv_file(std::string outputfile)
