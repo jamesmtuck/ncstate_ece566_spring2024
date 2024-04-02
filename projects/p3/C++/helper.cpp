@@ -66,8 +66,8 @@ FunctionCallee BuildAssertFT(Module *M)
   LLVMContext &Context = M->getContext();
   
   std::vector<Type*> v;
-  v.push_back(IntegerType::get(getGlobalContext(),32));
-  v.push_back(IntegerType::get(getGlobalContext(),32));
+  v.push_back(IntegerType::get(M->getContext(),32));
+  v.push_back(IntegerType::get(M->getContext(),32));
 
   ArrayRef<Type*> Params(v);
   FunctionType* FunType = FunctionType::get(Type::getVoidTy(Context),Params,false);
@@ -84,7 +84,7 @@ FunctionCallee BuildAssertFT(Module *M)
   BasicBlock *BB2 = BasicBlock::Create(Context,"fail",F);
   BasicBlock *BB3 = BasicBlock::Create(Context,"exit",F);
   IRBuilder<> Builder(BB1);
-  Value *cmp = Builder.CreateICmpNE(F->getArg(0),Builder.getInt32(0));
+  Value *cmp = Builder.CreateICmpEQ(F->getArg(0),Builder.getInt32(0));
   Builder.CreateCondBr(cmp,BB2,BB3);
   Builder.SetInsertPoint(BB2);
   // call fprintf to print the error message
@@ -95,7 +95,7 @@ FunctionCallee BuildAssertFT(Module *M)
   args.push_back(s);
   args.push_back(F->getArg(1));
   Builder.CreateCall(F->getParent()->getFunction("printf"),args,"assertcheck");
-  Builder.CreateCall(F->getParent()->getFunction("exit"),Builder.getInt32(1));
+  Builder.CreateCall(F->getParent()->getFunction("exit"),Builder.getInt32(1099));
   Builder.CreateBr(BB3);
   Builder.SetInsertPoint(BB3);
   Builder.CreateRetVoid();  
@@ -109,9 +109,9 @@ FunctionCallee BuildAssertCFG(Module *M)
   LLVMContext &Context = M->getContext();
   
   std::vector<Type*> v;
-  v.push_back(IntegerType::get(getGlobalContext(),32));
-  v.push_back(IntegerType::get(getGlobalContext(),32));  
-  v.push_back(IntegerType::get(getGlobalContext(),32));
+  v.push_back(IntegerType::get(M->getContext(),32));
+  v.push_back(IntegerType::get(M->getContext(),32));  
+  v.push_back(IntegerType::get(M->getContext(),32));
   
   ArrayRef<Type*> Params2(v);
   FunctionType* FunType2 = FunctionType::get(Type::getVoidTy(Context),Params2,false);
@@ -122,7 +122,7 @@ FunctionCallee BuildAssertCFG(Module *M)
   BasicBlock *BB2 = BasicBlock::Create(Context,"fail",F);
   BasicBlock *BB3 = BasicBlock::Create(Context,"exit",F);
   IRBuilder<> Builder(BB1);
-  Value *cmp = Builder.CreateICmpNE(F->getArg(0),Builder.getInt32(0));
+  Value *cmp = Builder.CreateICmpEQ(F->getArg(0),Builder.getInt32(0));
   Builder.CreateCondBr(cmp,BB2,BB3);
   Builder.SetInsertPoint(BB2);
   // call fprintf to print the error message
@@ -134,7 +134,7 @@ FunctionCallee BuildAssertCFG(Module *M)
   args.push_back(F->getArg(1));
   args.push_back(F->getArg(2));
   Builder.CreateCall(F->getParent()->getFunction("printf"),args,"assertcheck");
-  Builder.CreateCall(F->getParent()->getFunction("exit"),Builder.getInt32(1));
+  Builder.CreateCall(F->getParent()->getFunction("exit"),Builder.getInt32(1099));
   Builder.CreateBr(BB3);
   Builder.SetInsertPoint(BB3);
   Builder.CreateRetVoid();

@@ -17,6 +17,10 @@
 #include "transform.h"
 #include "stats.h"
 
+// Initialized in p3.cpp, do not re-initialize here
+extern int bonus_flag;
+extern int no_replicate_flag;
+extern int no_control_protection_flag;
 
 void SoftwareFaultTolerance(LLVMModuleRef Module)
 {

@@ -60,6 +60,7 @@ static cl::opt<bool>
               cl::desc("Do not perform SWFT."),
               cl::init(false));
 
+
 static cl::opt<bool>
         Verbose("verbose",
                     cl::desc("Verbose stats."),
@@ -69,6 +70,24 @@ static cl::opt<bool>
         NoCheck("no",
                 cl::desc("Do not check for valid IR."),
                 cl::init(false));
+
+// Use this to enable your bonus code
+static cl::opt<bool>
+        Bonus("bonus",
+                cl::desc("Run the bonus code."),
+                cl::init(false));
+
+// Use these to control whether or not parts of your pass run
+static cl::opt<bool>
+        NoReplicate("no-replicate",
+              cl::desc("Do not perform code replication."),
+              cl::init(false));
+
+static cl::opt<bool>
+        NoControlProtection("no-control-protection",
+              cl::desc("Do not perform control flow protection."),
+              cl::init(false));
+
 
 
 void RunO2(Module *M);

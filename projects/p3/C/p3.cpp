@@ -64,6 +64,30 @@ static cl::opt<bool>
                 cl::desc("Do not check for valid IR."),
                 cl::init(false));
 
+// Use this to enable your bonus code
+static cl::opt<bool>
+        Bonus("bonus",
+                cl::desc("Run the bonus code."),
+                cl::init(false));
+
+// Use these to control whether or not parts of your pass run
+static cl::opt<bool>
+        NoReplicate("no-replicate",
+              cl::desc("Do not perform code replication."),
+              cl::init(false));
+
+static cl::opt<bool>
+        NoControlProtection("no-control-protection",
+              cl::desc("Do not perform control flow protection."),
+              cl::init(false));
+
+extern "C" {
+  int bonus_flag = 0;
+  int no_replicate_flag = 0;
+  int no_control_protection_flag = 0;
+}
+
+
 void RunO2(Module *M);
 void BuildHelperFunctions(Module *);
 void summarize(Module *M);
@@ -101,7 +125,11 @@ int main(int argc, char **argv) {
 
     // Run O2 optimizations
     RunO2(M.get());
-  
+
+    bonus_flag = (int) Bonus;
+    no_replicate_flag = (int) NoReplicate;
+    no_control_protection_flag = (int) NoControlProtection;
+    
     if (!NoSWFT) {
       BuildHelperFunctions(M.get());      
       SoftwareFaultTolerance(wrap(M.get()));
