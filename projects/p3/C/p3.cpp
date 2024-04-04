@@ -129,9 +129,10 @@ int main(int argc, char **argv) {
     bonus_flag = (int) Bonus;
     no_replicate_flag = (int) NoReplicate;
     no_control_protection_flag = (int) NoControlProtection;
+
+    BuildHelperFunctions(M.get());      
     
     if (!NoSWFT) {
-      BuildHelperFunctions(M.get());      
       SoftwareFaultTolerance(wrap(M.get()));
     }
 

@@ -126,9 +126,10 @@ int main(int argc, char **argv) {
 
     // Run O2 optimizations
     RunO2(M.get());
-  
+
+    BuildHelperFunctions(M.get());      
+    
     if (!NoSWFT) {
-      BuildHelperFunctions(M.get());      
       SoftwareFaultTolerance(M.get());
     }
 
