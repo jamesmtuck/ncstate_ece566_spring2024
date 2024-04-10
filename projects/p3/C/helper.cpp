@@ -82,7 +82,7 @@ FunctionCallee BuildAssertFT(Module *M)
   BasicBlock *BB2 = BasicBlock::Create(Context,"fail",F);
   BasicBlock *BB3 = BasicBlock::Create(Context,"exit",F);
   IRBuilder<> Builder(BB1);
-  Value *cmp = Builder.CreateICmpNE(F->getArg(1),Builder.getInt32(0));
+  Value *cmp = Builder.CreateICmpNE(F->getArg(0),Builder.getInt32(1));
   Builder.CreateCondBr(cmp,BB2,BB3);
   Builder.SetInsertPoint(BB2);
   // call fprintf to print the error message
@@ -120,7 +120,7 @@ FunctionCallee BuildAssertCFG(Module *M)
   BasicBlock *BB2 = BasicBlock::Create(Context,"fail",F);
   BasicBlock *BB3 = BasicBlock::Create(Context,"exit",F);
   IRBuilder<> Builder(BB1);
-  Value *cmp = Builder.CreateICmpNE(F->getArg(1),Builder.getInt32(0));
+  Value *cmp = Builder.CreateICmpNE(F->getArg(0),Builder.getInt32(1));
   Builder.CreateCondBr(cmp,BB2,BB3);
   Builder.SetInsertPoint(BB2);
   // call fprintf to print the error message
