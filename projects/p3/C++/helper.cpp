@@ -40,8 +40,6 @@ using namespace llvm;
 extern FunctionCallee AssertFT;
 extern FunctionCallee AssertCFG;
 
-LLVMContext& getGlobalContext();
-
 void BuildExit(Module *M)
 {
   // make exit declaration
@@ -84,12 +82,12 @@ FunctionCallee BuildAssertFT(Module *M)
   BasicBlock *BB2 = BasicBlock::Create(Context,"fail",F);
   BasicBlock *BB3 = BasicBlock::Create(Context,"exit",F);
   IRBuilder<> Builder(BB1);
-  Value *cmp = Builder.CreateICmpEQ(F->getArg(0),Builder.getInt32(0));
+  Value *cmp = Builder.CreateICmpNE(F->getArg(1),Builder.getInt32(0));
   Builder.CreateCondBr(cmp,BB2,BB3);
   Builder.SetInsertPoint(BB2);
   // call fprintf to print the error message
   std::vector<Value*> args;
-  Value* s = Builder.CreateGlobalStringPtr("Assertion failed at %d\n");
+  Value* s = Builder.CreateGlobalStringPtr("**Possible soft-error detected due to data corruption (%d).\n");
   // cast s to i8*
   //s = Builder.CreatePointerCast(s,Type::getInt8PtrTy(Context));
   args.push_back(s);
@@ -122,12 +120,12 @@ FunctionCallee BuildAssertCFG(Module *M)
   BasicBlock *BB2 = BasicBlock::Create(Context,"fail",F);
   BasicBlock *BB3 = BasicBlock::Create(Context,"exit",F);
   IRBuilder<> Builder(BB1);
-  Value *cmp = Builder.CreateICmpEQ(F->getArg(0),Builder.getInt32(0));
+  Value *cmp = Builder.CreateICmpNE(F->getArg(1),Builder.getInt32(0));
   Builder.CreateCondBr(cmp,BB2,BB3);
   Builder.SetInsertPoint(BB2);
   // call fprintf to print the error message
   std::vector<Value*> args;
-  Value* s = Builder.CreateGlobalStringPtr("**Possible soft-error detected at due to control flow into block %d (%d). Exiting program.\n");
+  Value* s = Builder.CreateGlobalStringPtr("**Possible soft-error detected due to control flow into block %d (%d). Exiting program.\n");
   // cast s to i8*
   //s = Builder.CreatePointerCast(s,Type::getInt8PtrTy(Context));
   args.push_back(s);
