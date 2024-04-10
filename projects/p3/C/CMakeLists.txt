@@ -21,6 +21,9 @@ include_directories(.)
 add_executable(p3 p3.cpp helper.cpp swft.c dominance.cpp valmap.cpp loop.cpp transform.cpp worklist.cpp cfg.cpp stats.cpp)
 target_link_libraries(p3 ${llvm_libs})
 
+add_executable(fi fi.cpp)
+target_link_libraries(fi ${llvm_libs})
+
 enable_testing()
 add_test(NAME Usage COMMAND p3 -h)
 set_tests_properties(Usage
