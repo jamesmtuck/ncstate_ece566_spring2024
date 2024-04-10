@@ -178,18 +178,27 @@ main (int argc, char ** argv)
 
   Module *m = M.get();
 
+  int attempts = 0;
+
   // Loop until we have injected enough errors.  
   // Based on simple probability, we should eventually escape,
   // but, may need to revisit for a few possible pathological cases
   // that will trigger an infinite loop
-  while (ctrlInjCnt+dataInjCnt < NumErrors)
+  while (ctrlInjCnt+dataInjCnt < NumErrors)     
     {
+      attempts++;
+
+      if (attempts > 100*NumErrors) {
+	printf("Failed to insert requested number of errors.\n");
+	break;
+      }
+      
       bool injected = false;
       for(fit=m->begin(), fend=m->end(); fit!=fend && !injected; fit++)
 	{
 	  Function *F = &*fit;
 
-	  if (F->getName() == "assert_ft" || F->getName() == "assert_cfg_ft") continue;
+	  if (F->getName() == "assert_ft" || F->getName() == "assert_cfg_ft" || F->getName()=="flip") continue;
 	  
 	  if(!F->empty())
 	    {
@@ -228,14 +237,14 @@ main (int argc, char ** argv)
 			  }
 
 			// If we are allowed to inject data errors
-			if (!NoDataInject && !isa<BranchInst>(I))
+			if (!NoDataInject && !isa<BranchInst>(I) )
 			  {
 			    // Find an integer operand
 			    unsigned i;
 			    for(i=0; i<I->getNumOperands(); i++)
 			      {
 				Value *v = I->getOperand(i);
-				if (v->getType()->isIntegerTy() && isa<Instruction>(v) && v->getType()==IntegerType::get(Context,32))
+				if (v->getType()->isIntegerTy() && isa<Instruction>(v) && !isa<PHINode>(v) && v->getType()==IntegerType::get(Context,32))
 				  {
 				    // inject a 0 or 1 based on random number
 				    // note: we may not actually change the behavior
@@ -263,6 +272,10 @@ main (int argc, char ** argv)
     }
 
 
+  legacy::PassManager Passes;
+  Passes.add(createVerifierPass());
+  Passes.run(*M.get());
+  
   WriteBitcodeToFile(*M.get(),Out->os());
 
   Out->keep();
@@ -275,15 +288,19 @@ static FunctionCallee Flip;
 
 Value *FlipRandomBit(Instruction *I)
 {
+  BasicBlock::iterator it(I);
+  ++it;
+  IRBuilder<> Builder(&*it);  
   std::vector<Value*> args;
   args.push_back(I);
-  IRBuilder<> Builder(I);
   return Builder.CreateCall(Flip.getFunctionType(),Flip.getCallee(),args,"flip");
 }
 
 Value *FlipControlBit(Instruction *I)
 {
-  IRBuilder<> Builder(I);  
+  BasicBlock::iterator it(I);
+  ++it;
+  IRBuilder<> Builder(&*it);  
   return Builder.CreateNot(I,"flip");
 }
 
